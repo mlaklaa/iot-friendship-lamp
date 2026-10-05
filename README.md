@@ -1,0 +1,84 @@
+# ESP32 IoT Interactive Friendship Lamp
+
+An interactive, bidirectional IoT Friendship Lamp built with an ESP32, an SSD1306 I2C OLED Display (128x64), and an 8-LED WS2812B NeoPixel strip. The device uses the MQTT protocol over Wi-Fi to establish real-time, low-latency communication between paired devices.
+
+
+
+
+
+https://github.com/user-attachments/assets/02ebd182-2a1f-4f67-bebb-3e85e15b1395
+
+
+
+When a user touches or triggers their local lamp, the paired device immediately lights up with an ambient warm glow and displays an animated cat graphic on the OLED display.
+As seen in the simulation with MQTT, the screen activates as soon as someone touches the lamp
+
+https://github.com/user-attachments/assets/d0c323b9-9bb4-4e25-9db7-0b57f4338447
+
+## Overview and Features
+
+* **Cloud Connectivity via MQTT:** Subscribes and publishes to a HiveMQ broker topic for remote cross-device synchronization.
+* **Dual Feedback System:**
+  * High-contrast monochrome SSD1306 OLED screen running an animated blinking cat graphic.
+  * 8-LED WS2812B addressable strip providing a warm ambient glow ($RGB: 255, 140, 40$).
+* **Non-Blocking Architecture:** Fully orchestrated using non-blocking `millis()` timers for button debounce (~250 ms), animation frame switching, and display auto-off (7 seconds).
+* **Virtual Prototyping Ready:** Includes a clean `diagram.json` layout for the Wokwi Simulator in VS Code.
+
+## Hardware Pinout and Wiring
+
+| Component | Pin | ESP32 GPIO | Description |
+| :--- | :--- | :--- | :--- |
+| **SSD1306 OLED** | `VCC` | `3V3` | 3.3V Power Line |
+| **SSD1306 OLED** | `GND` | `GND.1` | Common Ground |
+| **SSD1306 OLED** | `SCL` | `GPIO 22` | I2C Clock Bus |
+| **SSD1306 OLED** | `SDA` | `GPIO 21` | I2C Data Bus |
+| **NeoPixel Strip (8x)** | `VDD` | `3V3` / `5V` | Power Supply |
+| **NeoPixel Strip (8x)** | `VSS` | `GND.2` | Ground Line |
+| **NeoPixel Strip (8x)** | `DIN` | `GPIO 18` | Digital Signal Line |
+| **Push Button** | `Pin 1` | `GND.2` | Ground Reference |
+| **Push Button** | `Pin 2` | `GPIO 5` | Input (`INPUT_PULLUP`) |
+
+## MQTT Protocol Specification
+
+* **Broker:** `broker.hivemq.com`
+* **Default TCP Port:** `1883` (Websocket Port: `8000`)
+* **Topic:** `sadia_friendship_lamp_2026/trigger`
+* **Payload:** `TOUCH`
+
+### Interaction Flow
+
+1. **Local Action:** Pressing the pushbutton publishes `TOUCH` to the MQTT topic.
+2. **Broker Routing:** HiveMQ forwards the payload to any client subscribed to `sadia_friendship_lamp_2026/trigger`.
+3. **Remote Reaction:** Upon receiving `TOUCH`, the ESP32 sets `isScreenActive = true`, turns on the 8 NeoPixels, and loops the blinking cat animation for 7000 ms before returning to an idle state.
+
+## Project Structure and Setup
+
+```text
+├── diagram.json          # Wokwi simulation schematic and wiring routes
+├── platformio.ini        # PlatformIO configuration and library dependencies
+├── README.md             # Project documentation
+└── src/
+    └── main.cpp          # Firmware logic (Wi-Fi, MQTT, OLED, NeoPixels)
+```
+
+### Dependencies (`platformio.ini`)
+
+* `adafruit/Adafruit SSD1306`
+* `adafruit/Adafruit GFX Library`
+* `adafruit/Adafruit NeoPixel`
+* `knolleary/PubSubClient`
+
+## How to Run the Simulation
+
+1. Open the project folder in Visual Studio Code.
+2. Ensure the PlatformIO IDE and Wokwi Simulator extensions are installed.
+3. Press `Ctrl + Shift + P` and execute:
+   ```text
+   Wokwi: Start Simulator
+   ```
+4. Open the [HiveMQ WebSocket Client](http://www.hivemq.com/demos/websocket-client/), connect to `broker.hivemq.com:8000`, and publish `TOUCH` to `sadia_friendship_lamp_2026/trigger` to trigger the lamp remotely.
+
+## Author
+
+* **Author:** Laklaa Marwa
+* **Year:** 2026
