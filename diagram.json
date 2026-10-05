@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "author": "Laklaa Marwa",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 140, "left": 100, "attrs": {} },
+    { "type": "board-ssd1306", "id": "oled", "top": -80, "left": 100, "attrs": { "i2cAddress": "0x3c" } },
+    { "type": "wokwi-pushbutton", "id": "btn", "top": 250, "left": -40, "attrs": { "color": "blue" } },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "strip",
+      "top": 150,
+      "left": 300,
+      "attrs": { "rows": "1", "cols": "8", "pixelate": "circle" }
+    }
+  ],
+  "connections": [
+    [ "esp:3V3", "oled:VCC", "red", [ "h-60", "v-240", "h65", "v15" ] ],
+    [ "esp:GND.1", "oled:GND", "black", [ "h-80", "v-250", "h75", "v25" ] ],
+    [ "esp:22", "oled:SCL", "blue", [ "h90", "v-240", "h-75", "v15" ] ],
+    [ "esp:21", "oled:SDA", "green", [ "h110", "v-250", "h-85", "v25" ] ],
+    [ "btn:2.r", "esp:5", "green", [ "h20", "v-10" ] ],
+    [ "btn:1.r", "esp:GND.2", "black", [ "h30", "v0" ] ],
+    [ "esp:18", "strip:DIN", "orange", [ "h20", "v-10" ] ],
+    [ "esp:3V3", "strip:VDD", "red", [ "h-40", "v150", "h260", "v-140" ] ],
+    [ "esp:GND.2", "strip:VSS", "black", [ "h30", "v50", "h150", "v-40" ] ]
+  ],
+  "dependencies": {}
+}
