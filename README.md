@@ -48,7 +48,7 @@ https://github.com/user-attachments/assets/d0c323b9-9bb4-4e25-9db7-0b57f4338447
 ### Interaction Flow
 
 1. **Local Action:** Pressing the pushbutton publishes `TOUCH` to the MQTT topic.
-2. **Broker Routing:** HiveMQ forwards the payload to any client subscribed to `sadia_friendship_lamp_2026/trigger`.
+2. **Broker Routing:** HiveMQ forwards the payload to any client subscribed to `friendship_lamp_2026/trigger`.
 3. **Remote Reaction:** Upon receiving `TOUCH`, the ESP32 sets `isScreenActive = true`, turns on the 8 NeoPixels, and loops the blinking cat animation for 7000 ms before returning to an idle state.
 
 ## Project Structure and Setup
